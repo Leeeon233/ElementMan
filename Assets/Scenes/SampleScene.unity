@@ -1875,7 +1875,7 @@ CompositeCollider2D:
   m_GameObject: {fileID: 628264474}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 5c7f214682d58a044bcee4b7d6303ed1, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -2274,19 +2274,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9fb5e1244a4d824bb25b62dfc67ae49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_JumpForce: 10
+  m_JumpForce: 7
   m_MoveSpeed: 7
-  m_MovementSmoothing: 0.05
+  fallFactor: 1.3
+  m_MovementSmoothing: 0.6
   m_AirControl: 1
   m_WhatIsGround:
     serializedVersion: 2
     m_Bits: 2048
   m_GroundCheck: {fileID: 313058195}
   m_CeilingCheck: {fileID: 730945966}
-  GroundCheckSize: {x: 0.68, y: 0.1}
+  GroundCheckSize: {x: 0.68, y: 0.15}
   CeilCheckSize: {x: 1.7, y: 0.8}
   m_Grounded: 0
   m_Crouched: 0
+  m_canChangeGravity: 1
   OnLandEvent:
     m_PersistentCalls:
       m_Calls: []
