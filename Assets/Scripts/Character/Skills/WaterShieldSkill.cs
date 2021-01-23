@@ -32,6 +32,7 @@ public class WaterShieldSkill : Skill
             isRelease = false;
             player.CanJump = true;
             player.CanMove = true;
+            player.param.IsReleaseSkill = false;
             waterShield.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             waterShield.GetComponent<WaterShield>().StopMove();
         }
@@ -64,6 +65,7 @@ public class WaterShieldSkill : Skill
         isRelease = true;
         player.CanJump = false;
         player.CanMove = false;
+        player.param.IsReleaseSkill = true;
         // 计算释放角度
         mousePos = GetMousePos();
         // 隐式转换为Vector2

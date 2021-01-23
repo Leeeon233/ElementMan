@@ -31,7 +31,7 @@ public class PlayerManager : MonoSingleton<PlayerManager>
     public Player ChangeForm(bool next)
     {
         
-        if (canChange && !CurPlayer.CannotStand && !CurPlayer.param.IsCrouch)
+        if (canChange && !CurPlayer.CannotStand && !CurPlayer.param.IsCrouch && !CurPlayer.param.IsReleaseSkill)
         {
             canChange = false;
             int n = next ? 1 : -1;
@@ -39,7 +39,8 @@ public class PlayerManager : MonoSingleton<PlayerManager>
             canChange = true;
             return ChangeByIndex(nextPlayerIndex, CurPlayer.param);
         }
-        return null;
+
+        return CurPlayer;
     }
 
     private Player ChangeByIndex(int idx, PlayerParam param)

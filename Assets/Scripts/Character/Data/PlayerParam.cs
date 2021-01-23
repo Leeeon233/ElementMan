@@ -8,6 +8,7 @@ public struct PlayerParam
     public byte JumpNumLeft;
     public bool IsFalling;
     public float Temperature;
+    public bool IsReleaseSkill;
 
     public PlayerParam(bool isJumping, byte jumpNumLeft, bool isFalling, float temperature)
     {
@@ -16,5 +17,6 @@ public struct PlayerParam
         IsFalling = isFalling;
         Temperature = temperature;
         IsCrouch = false;
+        IsReleaseSkill = false;
     }
 }

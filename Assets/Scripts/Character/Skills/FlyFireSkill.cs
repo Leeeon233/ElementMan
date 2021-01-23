@@ -24,10 +24,11 @@ public class FlyFireSkill : Skill
         // 按下时间变慢
         if (CanRelease && player.param.IsJumping)
         {
-            player.StartCoroutine(CancelRelease());
+            player.param.IsReleaseSkill = true;
             Time.timeScale = 0.1f;
             CanRelease = false;
             player.StartCoroutine(PressPerform2());
+            player.StartCoroutine(CancelRelease());
             // 创建技能指示器
         }
         
@@ -49,14 +50,16 @@ public class FlyFireSkill : Skill
         if (Math.Abs(Time.timeScale - 0.1f) < 1e-5f)
         {
             Debug.Log("施放");
+            
             // 蓄力完成，时间恢复正常
             Time.timeScale = 1f;
             CanRelease = true;
             //rb.AddForce(releaseDir * flyForce);
             rb.velocity = releaseDir * flyForce;
-
-            rb.gravityScale = 0f;
+            player.SetCc2dGravity(false);
+            rb.gravityScale = 0.2f;
             player.StartCoroutine(ResetGravity());
+            
         }
         
         
@@ -64,8 +67,10 @@ public class FlyFireSkill : Skill
 
     IEnumerator ResetGravity()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         rb.gravityScale = 1f;
+        player.SetCc2dGravity(true);
+        player.param.IsReleaseSkill = false;
     }
 
     public override void PressPerform()

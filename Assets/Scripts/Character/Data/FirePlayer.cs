@@ -32,9 +32,8 @@ public class FirePlayer : Player
     
     public override void Move(Vector2 moveVector)
     {
+        base.Move(moveVector);
         AnimationManager.Instance.Move(Mathf.Abs(moveVector.x));
-        if (moveVector.sqrMagnitude < 0.01)
-            return;
-        cc2d.Move(moveVector.x * moveSpeedScale, false);
+        
     }
 }

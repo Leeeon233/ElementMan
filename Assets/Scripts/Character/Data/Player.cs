@@ -36,6 +36,10 @@ public abstract class Player : MonoBehaviour
         Init();
     }
 
+    public void SetCc2dGravity(bool b)
+    {
+        cc2d.m_canChangeGravity = b;
+    }
     
 
     public void setPararm(PlayerParam param)
@@ -50,7 +54,7 @@ public abstract class Player : MonoBehaviour
 
     public virtual void Move(Vector2 moveVector)
     {
-        
+        cc2d.Move(moveVector.x * moveSpeedScale, false);
     }
 
     public virtual void Jump(bool jumpPressed)
