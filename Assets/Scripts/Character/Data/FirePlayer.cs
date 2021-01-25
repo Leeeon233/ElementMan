@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using QFramework;
 using UnityEngine;
 
 public class FirePlayer : Player
@@ -33,7 +34,7 @@ public class FirePlayer : Player
     public override void Move(Vector2 moveVector)
     {
         base.Move(moveVector);
-        AnimationManager.Instance.Move(Mathf.Abs(moveVector.x));
+        //AnimationManager.Instance.Move(Mathf.Abs(moveVector.x));
         
     }
 }

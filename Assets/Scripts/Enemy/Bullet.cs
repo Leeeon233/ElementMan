@@ -2,9 +2,9 @@
 
 public class Bullet : MonoBehaviour
 {
-    public Rigidbody2D rb;
+    [HideInInspector] public Rigidbody2D rb;
     [SerializeField] private float speed;
-    [SerializeField] private float maxDistance;
+    public float maxDistance;
     private Vector3 startPos;
 
     private void Start()
@@ -32,7 +32,7 @@ public class Bullet : MonoBehaviour
                 break;
 
             case "Player":
-                //Debug.Log("受到攻击");
+                Debug.Log("人物受到攻击");
                 Destroy(gameObject);
                 break;
         }

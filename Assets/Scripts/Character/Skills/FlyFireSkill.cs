@@ -46,17 +46,17 @@ public class FlyFireSkill : Skill
 
     public override void PressCancel()
     {
-        Debug.Log("将施放");
+        //Debug.Log("将施放");
         if (Math.Abs(Time.timeScale - 0.1f) < 1e-5f)
         {
-            Debug.Log("施放");
+            //Debug.Log("施放");
             
             // 蓄力完成，时间恢复正常
             Time.timeScale = 1f;
             CanRelease = true;
             //rb.AddForce(releaseDir * flyForce);
-            rb.velocity = releaseDir * flyForce;
             player.SetCc2dGravity(false);
+            rb.velocity = releaseDir * flyForce;
             rb.gravityScale = 0.2f;
             player.StartCoroutine(ResetGravity());
             

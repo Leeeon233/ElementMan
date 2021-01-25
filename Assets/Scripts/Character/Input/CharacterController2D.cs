@@ -25,9 +25,9 @@ public class CharacterController2D : MonoBehaviour
     
     private Rigidbody2D m_Rigidbody2D;
     private bool m_FacingRight = true;  // For determining which way the player is currently facing.
-    private Vector3 m_Velocity = Vector3.zero;
+    //private Vector3 m_Velocity = Vector3.zero;
     public bool m_canChangeGravity = true;
-
+    private Vector2 m_Velocity = Vector2.zero;
     [Header("Events")]
     [Space]
     public BoolEvent OnLandEvent;
@@ -50,64 +50,80 @@ public class CharacterController2D : MonoBehaviour
 
     }
 
+    private Vector2 tmp;
+    Vector2 targetVelocity;
     private void Update()
     {
 	    // 调整跳跃手感
-	    if (m_canChangeGravity && m_Rigidbody2D.velocity.y <= 0)
+	    
+	    if (m_canChangeGravity && m_Rigidbody2D.velocity.y < Physics2D.gravity.y * fallFactor * Time.deltaTime)
 	    {
-			m_Rigidbody2D.velocity += Vector2.up * (Physics2D.gravity.y * fallFactor * Time.deltaTime);
+		    var velocity = m_Rigidbody2D.velocity;
+		    tmp.x = velocity.x;
+		    tmp.y = velocity.y + Physics2D.gravity.y * fallFactor * Time.deltaTime;
+		    velocity = tmp;
+		    m_Rigidbody2D.velocity = velocity;
 	    }
     }
 
     private void FixedUpdate()
     {
-	    #region Ground Check
-	        wasGrounded = m_Grounded;
-	        m_Grounded = false;
-	        
-	        // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
-	        // This can be done using layers instead but Sample Assets will not overwrite your project settings.
-	        
-	        if (Physics2D.OverlapBox(m_GroundCheck.position, GroundCheckSize, 0, m_WhatIsGround))
+		#region Ground Check
+		
+        wasGrounded = m_Grounded;
+        m_Grounded = false;
+        
+        // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
+        // This can be done using layers instead but Sample Assets will not overwrite your project settings.
+        
+        if (Physics2D.OverlapBox(m_GroundCheck.position, GroundCheckSize, 0, m_WhatIsGround))
+        {
+	        m_Grounded = true;
+	        //(m_Rigidbody2D.velocity.y).LogInfo();
+	        if (!wasGrounded && m_Rigidbody2D.velocity.y < m_MoveSpeed-0.1f) //
 	        {
-		        m_Grounded = true;
-		        if (!wasGrounded && m_Rigidbody2D.velocity.y <= 1e-5)
-			        OnLandEvent.Invoke(true);
+		        
+		        (m_Rigidbody2D.velocity.y).LogInfo();
+		        //&& m_Rigidbody2D.velocity.y <= 1e-5}
+		        OnLandEvent.Invoke(true);
 	        }
-	        else if(wasGrounded)
-	        {
-		        OnLandEvent.Invoke(false);
-	        }
+        }
+        else if(wasGrounded)
+        {
+	        OnLandEvent.Invoke(false);
+        }
         #endregion
+        
         #region Ceil Check
-	        wasCrouched = m_Crouched;
-	        m_Crouched = false;
-		        
-	        // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
-	        // This can be done using layers instead but Sample Assets will not overwrite your project settings.
-		        
-	        if (Physics2D.OverlapBox(m_CeilingCheck.position, CeilCheckSize, 0, m_WhatIsGround))
-	        {
-		        m_Crouched = true;
-		        if (!wasCrouched)
-			        OnCrouchEvent.Invoke(true);
-	        }
-	        else if(wasCrouched)
-	        {
-		        OnCrouchEvent.Invoke(false);
-	        }
+        
+        wasCrouched = m_Crouched;
+        m_Crouched = false;
+	        
+        // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
+        // This can be done using layers instead but Sample Assets will not overwrite your project settings.
+	        
+        if (Physics2D.OverlapBox(m_CeilingCheck.position, CeilCheckSize, 0, m_WhatIsGround))
+        {
+	        m_Crouched = true;
+	        if (!wasCrouched)
+		        OnCrouchEvent.Invoke(true);
+        }
+        else if(wasCrouched)
+        {
+	        OnCrouchEvent.Invoke(false);
+        }
 	    #endregion
         
         
     }
 
-    // private void OnDrawGizmos()
-    // {
-    //     Gizmos.color = Color.red;
-    //     Gizmos.DrawCube(m_GroundCheck.position, GroundCheckSize);
-    //     Gizmos.color = Color.green;
-    //     Gizmos.DrawCube(m_CeilingCheck.position, CeilCheckSize);
-    // }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawCube(m_GroundCheck.position, GroundCheckSize);
+        Gizmos.color = Color.green;
+        Gizmos.DrawCube(m_CeilingCheck.position, CeilCheckSize);
+    }
 
     public void Move(float move, bool jump)
     {
@@ -147,17 +163,24 @@ public class CharacterController2D : MonoBehaviour
 			}*/
 
             // Move the character by finding the target velocity
-            Vector3 targetVelocity = new Vector2(move * m_MoveSpeed, m_Rigidbody2D.velocity.y);
-            // And then smoothing it out and applying it to the character
-            if (Mathf.Abs(move)< 1e-5)
-            {
-	            m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
-            }
-            else
-            {
-	            m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing/5);
-            }
             
+            // And then smoothing it out and applying it to the character
+            targetVelocity.x = move * m_MoveSpeed;
+            targetVelocity.y = m_Rigidbody2D.velocity.y;
+            
+            // m_Rigidbody2D.velocity = Mathf.Abs(move)< 1e-5
+	           //  ? Vector2.Lerp(m_Rigidbody2D.velocity, targetVelocity, m_MovementSmoothing) 
+	           //  : Vector2.Lerp(m_Rigidbody2D.velocity, targetVelocity, m_MovementSmoothing/5);
+        
+           if (Mathf.Abs(move)< 1e-5)
+           {
+	           m_Rigidbody2D.velocity = Vector2.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
+           }
+           else
+           {
+	           m_Rigidbody2D.velocity = Vector2.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing/5);
+           }
+	           
             // If the input is moving the player right and the player is facing left...
             if (move > 0 && !m_FacingRight)
             {
@@ -177,8 +200,11 @@ public class CharacterController2D : MonoBehaviour
             // Add a vertical force to the player.
             //m_Rigidbody2D.AddForce(m_Grounded?new Vector2(0f, m_JumpForce): new Vector2(0f, m_JumpForce));
             m_Grounded = false;
-            m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_JumpForce);
+            targetVelocity.x = m_Rigidbody2D.velocity.x;
+            targetVelocity.y = m_JumpForce;
+            m_Rigidbody2D.velocity = targetVelocity;
         }
+        
     }
 
     private void Flip()

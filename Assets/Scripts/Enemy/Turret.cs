@@ -5,6 +5,7 @@ public class Turret : MonoBehaviour
     [SerializeField] private Bullet bullet;
     [SerializeField] private Transform muzzle;
     [SerializeField] private float shootInterval = 1f;
+    [SerializeField] private float maxDistance = 300f;
     public bool CanMove;
     public Transform End;
     public float moveSpeed = 2f;
@@ -12,6 +13,7 @@ public class Turret : MonoBehaviour
     private Vector3 start;
     private Vector3 tmp;
     private Vector3 muzzleDir;
+    private Bullet _bullet;
 
     // Start is called before the first frame update
     private void Start()
@@ -44,6 +46,7 @@ public class Turret : MonoBehaviour
     // Update is called once per frame
     private void GenBullet()
     {
-        Instantiate(bullet, muzzle.position, Quaternion.Euler(muzzleDir));
+        _bullet = Instantiate(bullet, muzzle.position, Quaternion.Euler(muzzleDir));
+        _bullet.maxDistance = maxDistance;
     }
 }

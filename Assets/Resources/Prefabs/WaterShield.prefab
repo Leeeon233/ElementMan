@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4455180845246870406}
   - component: {fileID: 5965536467618370608}
   - component: {fileID: 5962943747091489519}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: WaterShield
   m_TagString: WaterShield
   m_Icon: {fileID: 0}

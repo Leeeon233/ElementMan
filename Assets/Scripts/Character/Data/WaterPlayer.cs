@@ -6,10 +6,10 @@ public class WaterPlayer : Player
 {
     public override void Init()
     {
+        JumpMaxNum = 1;
         this.param = new PlayerParam(false, JumpMaxNum, false, 36.5f);
         CanJump = true;
         CanMove = true;
-        JumpMaxNum = 1;
         IsUnconquerable = false;
         CannotStand = false;
         moveSpeedScale = 1f;
@@ -20,7 +20,14 @@ public class WaterPlayer : Player
         InitSkill();
     }
 
-
+    private void Start()
+    {
+        cc2d = GetComponentInParent<CharacterController2D>();
+        cc2d.OnLandEvent.AddListener(OnLand);
+        cc2d.m_CeilingCheck = CeilingCheck;
+        cc2d.m_GroundCheck = GroundCheck;
+        Init();
+    }
 
     private void OnCrouch(bool v)
     {

@@ -54,13 +54,13 @@ public abstract class Player : MonoBehaviour
 
     public virtual void Move(Vector2 moveVector)
     {
-        cc2d.Move(moveVector.x * moveSpeedScale, false);
+        if(cc2d) cc2d.Move(moveVector.x * moveSpeedScale, false);
     }
 
     public virtual void Jump(bool jumpPressed)
     {
         if (!CanJump || !jumpPressed || param.JumpNumLeft <= 0) return;
-        cc2d.Move(1, true);
+        cc2d.Move(0, true);
         param.IsJumping = true;
         param.JumpNumLeft--;
         //"跳跃数--".LogInfo();
